@@ -1,0 +1,51 @@
+[PrefixDeclaration]
+:		http://www.example.org/pubfin#
+owl:		http://www.w3.org/2002/07/owl#
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+xml:		http://www.w3.org/XML/1998/namespace
+xsd:		http://www.w3.org/2001/XMLSchema#
+obda:		https://w3id.org/obda/vocabulary#
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+
+[MappingDeclaration] @collection [[
+mappingId	Program
+target		:/program/{programcode} a :Program ; :Code {programcode}^^xsd:int ; :Name {programname}^^xsd:literal . 
+source		select programname, programcode
+			from publicbudget.expenditurebudgeted
+
+mappingId	OrganizationUnit
+target		:/OrganizationUnit/{unitcode} a :OrganizationUnit ; :Code {unitcode}^^xsd:int ; :Name {unitname}^^xsd:literal ; :hasBudget :/Budget/{budgetid} . 
+source		select unitname, unitcode, budgetid
+			from publicbudget.expenditurebudgeted
+
+mappingId	hasProgram
+target		:/OrganizationUnit/{unitcode} :hasProgram :/Program/{programcode} . 
+source		select unitcode, programcode
+			from publicbudget.expenditurebudgeted
+
+mappingId	budget
+target		:/Budget/{budgetid} a :Budget ; :Code {budgetid}^^xsd:int ; :budgetedYear :/Year/{fiscalYear} ; :containBudgetPrograms :/Program/{programcode} . 
+source		select a.budgetid, a.fiscalyear, b.programcode
+			from publicbudget.general as a, publicbudget.expenditurebudgeted as b
+
+mappingId	TaxRevenue
+target		:/TaxRevenue/{budgetid} a :TaxRevenue ; :AmountInThousand {taxSum}^^xsd:float . 
+source		SELECT budgetid, vattotal +profittax +excisetaxtotal +personalincometax +nationaltaxesothers +customsduties as taxSum
+			FROM publicbudget.revenue_taxofficesandcustoms
+
+mappingId	CapitalBudget
+target		:/CapitalBudget/{programcode}{unitcode} a :CapitalBudget ; :AmountInThousand {totalcapitalexpenditure}^^xsd:float ; :containBudgetPrograms :/Program/{programcode} ; :isBudgetOf :/OrganizationUnit/{unitcode} . 
+source		select programcode, unitcode, totalcapitalexpenditure
+			from publicbudget.expenditurebudgeted
+
+mappingId	OperatingBudget
+target		:/OperatingBudget/{unitcode}{programcode} a :OperatingBudget ; :AmountInThousand {totalcurrentexpenditure}^^xsd:float ; :containBudgetPrograms :/Program/{programcode} ; :isBudgetOf :/OrganizationUnit/{unitcode} . 
+source		select programcode, unitcode, totalcurrentexpenditure
+			from publicbudget.expenditurebudgeted
+
+mappingId	Year
+target		:/Year/{fiscalyear} a :Year ; :YearValue {fiscalyear}^^xsd:int . 
+source		select fiscalyear
+			from publicbudget.general
+]]
+
