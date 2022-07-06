@@ -7,5 +7,5 @@ Some aims to mention are:
 - write Turtle syntax GAV mappings in Ontop reasoner
 - identify typical queries over the ontology and offer them as ready-made ones through an editor-like application in Java using an SPARQL endpoint
 - enable the user to edit or write his/her own queries in SPARQL over the ontology elements
-- attempts to experiment data provenance for user, semi-autonomous mapping and knowledge update
--attempt to experiment with inconsistency tolerance
+- attempts to experiment data provenance for user, semi-autonomous mapping and knowledge update, inconsistency tolerance
+
