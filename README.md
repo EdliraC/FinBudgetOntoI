@@ -1,4 +1,4 @@
-# PublicBudgetOntoI
+# PublicBudgetOntology-basedIntegration
 Public Budget data integration through ontology
 An experiment on how to offer integrated information that may needed during cycle of public budgeting.
 Some aims to mention are:
