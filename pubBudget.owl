@@ -22,7 +22,7 @@
 ###  http://www.example.org/pubfin#consume
 :consume rdf:type owl:ObjectProperty ;
          rdfs:domain :Program ;
-         rdfs:range :MonetaryFund .
+         rdfs:range :InputResource .
 
 
 ###  http://www.example.org/pubfin#containBudgetPrograms
@@ -61,6 +61,12 @@
 :isBudgetOf rdf:type owl:ObjectProperty .
 
 
+###  http://www.example.org/pubfin#isFinanced
+:isFinanced rdf:type owl:ObjectProperty ;
+            rdfs:domain :Budget ;
+            rdfs:range :Debt .
+
+
 ###  http://www.example.org/pubfin#isProgramOf
 :isProgramOf rdf:type owl:ObjectProperty .
 
@@ -70,28 +76,15 @@
 #################################################################
 
 ###  http://www.example.org/pubfin#AmountInThousand
-:AmountInThousand rdf:type owl:DatatypeProperty ;
-                  rdfs:domain :CapitalBudget ,
-                              :Expenditure ,
-                              :MonetaryFund ,
-                              :OperatingBudget ,
-                              :TaxRevenue ;
-                  rdfs:range xsd:float .
+:AmountInThousand rdf:type owl:DatatypeProperty .
 
 
 ###  http://www.example.org/pubfin#Code
-:Code rdf:type owl:DatatypeProperty ;
-      rdfs:domain :Budget ,
-                  :OrganizationUnit ,
-                  :Program ;
-      rdfs:range xsd:int .
+:Code rdf:type owl:DatatypeProperty .
 
 
 ###  http://www.example.org/pubfin#Name
-:Name rdf:type owl:DatatypeProperty ;
-      rdfs:domain :OrganizationUnit ,
-                  :Program ;
-      rdfs:range rdfs:Literal .
+:Name rdf:type owl:DatatypeProperty .
 
 
 ###  http://www.example.org/pubfin#YearValue
@@ -106,8 +99,16 @@
 
 ###  http://www.example.org/pubfin#Budget
 :Budget rdf:type owl:Class ;
-        owl:disjointWith :OrganizationUnit ,
-                         :Year .
+	rdfs:subClassOf [
+	rdf:type owl:Restriction;
+	owl:onProperty :hasProgram;
+	owl:someValuesFrom owl:Thing.];
+	
+	rdfs:subClassOf [
+	rdf:type owl:Restriction;
+	owl:onProperty :Code;
+	owl:someValuesFrom rdfs:Literal.].
+
 
 
 ###  http://www.example.org/pubfin#CapitalBudget
@@ -116,13 +117,21 @@
                owl:disjointWith :OperatingBudget .
 
 
+###  http://www.example.org/pubfin#Debt
+:Debt rdf:type owl:Class .
+
+
 ###  http://www.example.org/pubfin#Expenditure
 :Expenditure rdf:type owl:Class .
 
 
+###  http://www.example.org/pubfin#InputResource
+:InputResource rdf:type owl:Class .
+
+
 ###  http://www.example.org/pubfin#MonetaryFund
 :MonetaryFund rdf:type owl:Class ;
-              owl:disjointWith :OrganizationUnit .
+              rdfs:subClassOf :InputResource .
 
 
 ###  http://www.example.org/pubfin#OperatingBudget
@@ -131,8 +140,7 @@
 
 
 ###  http://www.example.org/pubfin#OrganizationUnit
-:OrganizationUnit rdf:type owl:Class ;
-                  owl:disjointWith :Program .
+:OrganizationUnit rdf:type owl:Class .
 
 
 ###  http://www.example.org/pubfin#Program
