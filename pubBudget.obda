@@ -27,19 +27,20 @@ mappingId	budget
 target		:/Budget/{budgetid} a :Budget ; :Code {budgetid}^^xsd:int ; :budgetedYear :/Year/{fiscalYear} ; :containBudgetPrograms :/Program/{programcode} . 
 source		select a.budgetid, a.fiscalyear, b.programcode
 			from publicbudget.general as a, publicbudget.expenditurebudgeted as b
+			where a.budgetid=b.budgetid
 
 mappingId	TaxRevenue
-target		:/TaxRevenue/{budgetid} a :TaxRevenue ; :AmountInThousand {taxSum}^^xsd:float . 
-source		SELECT budgetid, vattotal +profittax +excisetaxtotal +personalincometax +nationaltaxesothers +customsduties as taxSum
+target		:/TaxRevenue/{TaxId} a :TaxRevenue ; :AmountInThousand {taxSum}^^xsd:int . 
+source		SELECT budgetid as TaxId, vattotal +profittax +excisetaxtotal +personalincometax +nationaltaxesothers +customsduties as taxSum
 			FROM publicbudget.revenue_taxofficesandcustoms
 
 mappingId	CapitalBudget
-target		:/CapitalBudget/{programcode}{unitcode} a :CapitalBudget ; :AmountInThousand {totalcapitalexpenditure}^^xsd:float ; :containBudgetPrograms :/Program/{programcode} ; :isBudgetOf :/OrganizationUnit/{unitcode} . 
+target		:/CapitalBudget/{programcode}{unitcode} a :CapitalBudget ; :AmountInThousand {totalcapitalexpenditure}^^xsd:int ; :containBudgetPrograms :/Program/{programcode} ; :isBudgetOf :/OrganizationUnit/{unitcode} . 
 source		select programcode, unitcode, totalcapitalexpenditure
 			from publicbudget.expenditurebudgeted
 
 mappingId	OperatingBudget
-target		:/OperatingBudget/{unitcode}{programcode} a :OperatingBudget ; :AmountInThousand {totalcurrentexpenditure}^^xsd:float ; :containBudgetPrograms :/Program/{programcode} ; :isBudgetOf :/OrganizationUnit/{unitcode} . 
+target		:/OperatingBudget/{unitcode}{programcode} a :OperatingBudget ; :AmountInThousand {totalcurrentexpenditure}^^xsd:int ; :containBudgetPrograms :/Program/{programcode} ; :isBudgetOf :/OrganizationUnit/{unitcode} . 
 source		select programcode, unitcode, totalcurrentexpenditure
 			from publicbudget.expenditurebudgeted
 
